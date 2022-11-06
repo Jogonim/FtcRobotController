@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 public class DMHardwareTest {
 
     // Instantiating the hardware classes
@@ -13,6 +14,8 @@ public class DMHardwareTest {
     public DcMotor frontRight;
     public DcMotor backLeft;
     public DcMotor backRight;
+    public DcMotor slidemotorleft;
+    public DcMotor slidemotorright;
 
     public boolean runThisWithEncoders;
 
@@ -27,26 +30,33 @@ public class DMHardwareTest {
     public void initTeleOpIMU(HardwareMap hwMap, boolean bk) {
         this.hwMap = hwMap;
         timer.reset();
-        frontLeft = hwMap.dcMotor.get("frntLF");
+        /*frontLeft = hwMap.dcMotor.get("frntLF");
         frontRight = hwMap.dcMotor.get("frntRT");
         backLeft = hwMap.dcMotor.get("bckLF");
         backRight = hwMap.dcMotor.get("bckRT");
+
+         */
+        slidemotorleft = hwMap.dcMotor.get("slidemotorleft");
+        //slidemotorright= hwMap.dcMotor.get("slidemotorright");
+
         if (bk) {
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+          /*  frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+           */
+            slidemotorleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //slidemotorright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
 
     // Method to set the power of all of the motors...
 
     public void setPowerOfAllMotorsTo(double speed) {
-        //We only have two motors...
-        frontLeft.setPower(speed);
-        frontRight.setPower(speed);
-        backLeft.setPower(speed);
-        backRight.setPower(speed);
+        //frontLeft.setPower(speed);
+        //frontRight.setPower(speed);
+        //backLeft.setPower(speed);
+        //backRight.setPower(speed);
     }
 
     // Method to get current time...
