@@ -30,33 +30,33 @@ public class DMHardwareTest {
     public void initTeleOpIMU(HardwareMap hwMap, boolean bk) {
         this.hwMap = hwMap;
         timer.reset();
-        /*frontLeft = hwMap.dcMotor.get("frntLF");
+        frontLeft = hwMap.dcMotor.get("frntLF");
         frontRight = hwMap.dcMotor.get("frntRT");
         backLeft = hwMap.dcMotor.get("bckLF");
         backRight = hwMap.dcMotor.get("bckRT");
 
-         */
+
         slidemotorleft = hwMap.dcMotor.get("slidemotorleft");
-        //slidemotorright= hwMap.dcMotor.get("slidemotorright");
+        slidemotorright= hwMap.dcMotor.get("slidemotorright");
 
         if (bk) {
-          /*  frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-           */
+
             slidemotorleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //slidemotorright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            slidemotorright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
 
     // Method to set the power of all of the motors...
 
     public void setPowerOfAllMotorsTo(double speed) {
-        //frontLeft.setPower(speed);
-        //frontRight.setPower(speed);
-        //backLeft.setPower(speed);
-        //backRight.setPower(speed);
+        frontLeft.setPower(speed);
+        frontRight.setPower(speed);
+        backLeft.setPower(speed);
+        backRight.setPower(speed);
     }
 
     // Method to get current time...

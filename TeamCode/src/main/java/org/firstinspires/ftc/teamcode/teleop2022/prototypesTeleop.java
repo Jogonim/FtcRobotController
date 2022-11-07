@@ -14,61 +14,6 @@ public class prototypesTeleop extends LinearOpMode {
     boolean bk =  true;
 
 
-    public void slideControl ( DcMotor left /*DcMotor right*/, boolean up, boolean down) {
-        int ticksPerRev = 1152;
-        double power = 1.0;
-        int rev = 50;
-
-
-        telemetry.addLine(String.format("\nIn SlideControl . Up =%s down =%s ",up,down));
-        telemetry.addLine(String.format("\nIn SlideControl encoder position left = %d,",left.getCurrentPosition()));
-        telemetry.update();
-
-
-        int newTargetLeft = left.getCurrentPosition();
-        //int newTargetRight = right.getTargetPosition();
-
-        if (up) {
-            newTargetLeft = left.getCurrentPosition() + (ticksPerRev * rev);
-           // newTargetRight = right.getTargetPosition() + (ticksPerRev * rev);
-        }
-        else if (down) {
-            newTargetLeft = left.getCurrentPosition() - (ticksPerRev * rev);
-          //  newTargetRight = right.getTargetPosition() - (ticksPerRev * rev);
-        }
-        left.setTargetPosition(newTargetLeft);
-       // right.setTargetPosition(newTargetRight);
-
-        telemetry.addLine(String.format("\nIn SlideControl motor encoder position left = %d", newTargetLeft));
-        telemetry.update();
-        left.setPower(power);
-        //right.setPower(power);
-
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-       // right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-       // sleep(2000);
-
-        while(left.isBusy()) {
-            if (up) {
-                telemetry.addLine("Slide is active and moving up ");
-                telemetry.update();
-            } else if (down) {
-                telemetry.addLine("Slide is active and moving down ");
-                telemetry.update();
-
-            } else {
-                telemetry.addLine("Slide is static ");
-                telemetry.update();
-
-            }
-
-        }
-
-        left.setPower(0);
-       // right.setPower(0);
-
-    }
-
 
     @Override
     public void runOpMode() {
@@ -77,12 +22,21 @@ public class prototypesTeleop extends LinearOpMode {
         double rx;
         boolean linear_slide_up;
         boolean linear_slide_down;
+        int curposLeft;
+        int curposRight;
+        int newposLeft = 0;
+        int newposRight =0;
+        int ticksPerRev = 240;  // 1 revolution
+        double power = 1.0;     // Adjust the power of the slide of the power
+        int rev = 1;
 
         robot.initTeleOpIMU(hardwareMap, bk);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         robot.slidemotorleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //robot.slidemotorright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.slidemotorright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             y = gamepad1.right_stick_x;
@@ -102,42 +56,50 @@ public class prototypesTeleop extends LinearOpMode {
             double frontRightPower = (-y - x - rx) / denominator;
             double backRightPower = (-y + x - rx) / denominator;
 
-/*
+
             robot.frontLeft.setPower(frontLeftPower/2.0);
             robot.backLeft.setPower(backLeftPower/2.0);
             robot.frontRight.setPower(frontRightPower/2.0);
             robot.backRight.setPower(backRightPower/2.0);
 
-*/
 
+            //////////////////////////////////////////////////////////////////////////////////////
+            // Slide motor Code
+            // ////////////////////////////////////////////////////////////////////////////////////
+            curposLeft = robot.slidemotorleft.getCurrentPosition();
+            curposRight = robot.slidemotorright.getCurrentPosition();
 
-           // slideControl(robot.slidemotorleft, /*robot.slidemotorright*/ linear_slide_up, linear_slide_down);
-            int curpos = robot.slidemotorleft.getCurrentPosition();
-            int newpos =0;
-            int ticksPerRev = 1152;
-            double power = 1.0;
-            int rev = 5;
-            telemetry.addLine(String.format("\nIn SlideControl motor encoder position left = %d", curpos));
+            telemetry.addLine(String.format("\nIn SlideControl motor encoder position left = %d right = %d", curposLeft, curposRight));
             telemetry.update();
+
             if (linear_slide_up) {
-                newpos = curpos + (ticksPerRev * rev);
-                // newTargetRight = right.getTargetPosition() + (ticksPerRev * rev);
-                robot.slidemotorleft.setTargetPosition(newpos);
+                newposLeft = curposLeft + (ticksPerRev * rev);
+                newposRight = curposRight - (ticksPerRev * rev);
+
+                robot.slidemotorleft.setTargetPosition(newposLeft);
+                robot.slidemotorright.setTargetPosition(newposRight);
                 robot.slidemotorleft.setPower(power);
+                robot.slidemotorright.setPower(power);
                 robot.slidemotorleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.slidemotorright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
             else if (linear_slide_down) {
-                newpos = curpos - (ticksPerRev * rev);
-                //  newTargetRight = right.getTargetPosition() - (ticksPerRev * rev);
-                robot.slidemotorleft.setTargetPosition(newpos);
+                newposLeft = curposLeft - (ticksPerRev * rev);
+                newposRight = curposRight - (ticksPerRev * rev);
+
+                robot.slidemotorleft.setTargetPosition(newposLeft);
+                robot.slidemotorright.setTargetPosition(newposRight);
                 robot.slidemotorleft.setPower(power);
+                robot.slidemotorright.setPower(power);
                 robot.slidemotorleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.slidemotorright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
 
 
-            while (robot.slidemotorleft.isBusy()){
-                curpos = robot.slidemotorleft.getCurrentPosition();
-                telemetry.addLine(String.format("\n slide modtor encoder position = %d ", curpos));
+            while (robot.slidemotorleft.isBusy() || robot.slidemotorleft.isBusy() ){
+                curposLeft = robot.slidemotorleft.getCurrentPosition();
+                curposRight = robot.slidemotorright.getCurrentPosition();
+                telemetry.addLine(String.format("\n slide modtor encoder Left position = %d , Right position = %d", curposLeft, curposRight));
                 telemetry.update();
             }
 
